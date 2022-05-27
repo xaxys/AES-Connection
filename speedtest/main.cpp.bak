@@ -1,0 +1,135 @@
+#include <iostream>
+#include <ctime>
+#include <benchmark/benchmark.h>
+#include <memory>
+#include "aes.h"
+
+const unsigned int MICROSECONDS = 1000000;
+const unsigned int MEGABYTE = 1024 * 1024 * sizeof(uint8_t);
+size_t megabytesCount = 10;
+size_t plainLength = megabytesCount * MEGABYTE;
+
+static void
+bench_encrypt(benchmark::State& state) {
+    state.PauseTiming();
+    AES<AESKeyLength::AES_256> aes;
+    uint8_t key[] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a,
+                           0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15,
+                           0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f};
+
+    srand(std::time(nullptr));
+
+    auto get_random_plain = [](size_t length) {
+        auto plain = std::make_unique<uint8_t[]>(length);
+        for (size_t i = 0; i < length; i++) {
+            plain.get()[i] = rand() % 256;
+        }
+        return plain;
+    };
+    auto plain = get_random_plain(plainLength);
+    state.ResumeTiming();
+
+    auto out = aes.encrypt_cbc(plain.get(), plainLength, key);
+
+    state.PauseTiming();
+}
+BENCHMARK(bench_encrypt);
+
+static void
+bench_decrypt(benchmark::State& state) {
+    state.PauseTiming();
+    AES<AESKeyLength::AES_256> aes;
+    uint8_t key[] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a,
+                           0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15,
+                           0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f};
+
+    srand(std::time(nullptr));
+
+    auto get_random_plain = [](size_t length) {
+        auto plain = std::make_unique<uint8_t[]>(length);
+        for (size_t i = 0; i < length; i++) {
+            plain.get()[i] = rand() % 256;
+        }
+        return plain;
+    };
+    auto plain = get_random_plain(plainLength);
+    auto out = aes.encrypt_cbc(plain.get(), plainLength, key);
+    state.ResumeTiming();
+
+    auto decrypt_text = aes.decrypt_cbc(out.get(), plainLength, key);
+
+    state.PauseTiming();
+}
+BENCHMARK(bench_decrypt);
+
+static void
+bench_tcp(benchmark::State& state)
+ 
+BENCHMARK_MAIN();
+
+/**
+#include <iostream>
+#include <benchmark/benchmark.h>
+#include <memory>
+#include "aes.h"
+
+const unsigned int MICROSECONDS = 1000000;
+const unsigned int MEGABYTE = 1024 * 1024 * sizeof(uint8_t);
+size_t megabytesCount = 100;
+size_t plainLength = megabytesCount * MEGABYTE;
+
+time_t
+get_microseconds() {
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    return MICROSECONDS * tv.tv_sec + tv.tv_usec;
+}
+
+static void
+bench_encrypt(benchmark::State& state) {
+    state.PauseTiming();
+
+    uint8_t key[] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a,
+                           0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15,
+                           0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f};
+
+    srand(std::time(nullptr));
+
+    auto get_random_plain = [](size_t length) {
+        auto plain = std::make_unique<uint8_t[]>(length);
+        for (size_t i = 0; i < length; i++) {
+            plain.get()[i] = rand() % 256;
+        }
+        return plain;
+    };
+
+    state.ResumeTiming();
+    {
+        std::cout << "Start raw encrypt speedtest" << std::endl;
+        auto plain = get_random_plain(plainLength);
+
+        AES<AESKeyLength::AES_256> aes;
+        auto start = get_microseconds();
+        auto out = aes.encrypt_cbc(plain.get(), plainLength, key);
+        auto delta = get_microseconds() - start;
+
+        auto speed = (double)megabytesCount / delta * MICROSECONDS;
+        printf("Raw encrypt speed %.2f Mb/s\n", speed);
+
+        std::cout << "Start raw decrypt speedtest" << std::endl;
+        start = get_microseconds();
+        auto decrypt_text = aes.decrypt_cbc(out.get(), plainLength, key);
+        delta = get_microseconds() - start;
+
+        speed = (double)megabytesCount / delta * MICROSECONDS;
+        printf("Raw decrypt speed %.2f Mb/s\n", speed);
+    }
+
+    return 0;
+}
+
+BENCHMARK(bench_encrypt);
+ 
+BENCHMARK_MAIN();
+ * 
+ */
