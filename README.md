@@ -12,8 +12,17 @@ Modern C++ AES (Advanced Encryption Standard) implementation
 
 ## Links
 
-* [Wiki](https://en.wikipedia.org/wiki/Advanced_Encryption_Standard)
-* [NIST](https://www.nist.gov/publications/advanced-encryption-standard-aes)
+- [Wiki](https://en.wikipedia.org/wiki/Advanced_Encryption_Standard)
+- [NIST](https://www.nist.gov/publications/advanced-encryption-standard-aes)
+
+## Quick Start
+
+1. `git clone https://github.com/xaxys/AES-Connection.git`
+1. `docker-compose build`
+1. `docker-compose up -d`
+1. `make`
+1. Check `lib/libaes.a` and `lib/libaes_debug.a` for aes library
+1. Check `bin/speedtest` for benchmark
 
 ## Usage
 
@@ -191,7 +200,7 @@ use `boost::asio` to manage `tcp` connection asynchronously. (C++20 coroutine in
 
 I'm trying to create a REPL as chatting client/server, but not finished yet
 
-## Development:
+## Development
 
 1. `git clone https://github.com/xaxys/AES-Connection.git`
 1. `docker-compose build`
@@ -199,24 +208,25 @@ I'm trying to create a REPL as chatting client/server, but not finished yet
 1. use make commands
 
 There are four executables in `bin` folder:  
-* `test` - run tests  
-* `debug` - version for debugging (main code will be taken from cmd/main.cpp)  
-* `profile` - version for profiling with gprof (main code will be taken from cmd/main.cpp)  
-* `speedtest` - performance speed test (main code will be taken from speedtest/main.cpp)
-* `release` - version with optimization (main code will be taken from cmd/main.cpp)  
 
+- `test` - run tests
+- `debug` - version for debugging (main code will be taken from cmd/main.cpp)  
+- `profile` - version for profiling with gprof (main code will be taken from cmd/main.cpp)  
+- `speedtest` - performance speed test (main code will be taken from speedtest/main.cpp)
+- `release` - version with optimization (main code will be taken from cmd/main.cpp)  
 
-Build commands:  
-* `make build_all` - build all targets
-* `make build_test` - build `test` target
-* `make build_debug` - build `debug` target
-* `make build_profile` - build `profile` target
-* `make build_speed_test` - build `speedtest` target
-* `make build_release` - build `release` target
-* `make style_fix` - fix code style
-* `make test` - run tests
-* `make debug` - run debug version
-* `make profile` - run profile version
-* `make speed_test` - run performance speed test
-* `make release` - run `release` version
-* `make clean` - clean `bin` directory
+Build commands:
+
+- `make build_all` - build all targets
+- `make build_test` - build `test` target
+- `make build_debug` - build `debug` target
+- `make build_profile` - build `profile` target
+- `make build_speed_test` - build `speedtest` target
+- `make build_release` - build `release` target
+- `make style_fix` - fix code style
+- `make test` - run tests
+- `make debug` - run debug version
+- `make profile` - run profile version
+- `make speed_test` - run performance speed test
+- `make release` - run `release` version
+- `make clean` - clean `bin` directory
